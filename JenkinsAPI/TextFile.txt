@@ -1,0 +1,40 @@
+﻿pipeline {
+    agent any
+
+    environment {
+        PROJECT_PATH = "JenkinsAPI/JenkinsAPI.csproj"
+        BUILD_CONFIG = "Release"
+    }
+
+    stages {
+
+        stage('Restore') {
+            steps {
+                echo "Restoring NuGet packages..."
+                bat "dotnet restore ${PROJECT_PATH}"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Building application..."
+                bat "dotnet build ${PROJECT_PATH} --configuration ${BUILD_CONFIG}"
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo "Build completed successfully."
+        }
+
+        failure {
+            echo "Build failed. Please check console output."
+        }
+
+        always {
+            echo "Pipeline execution finished."
+        }
+    }
+}
